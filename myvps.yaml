@@ -1,0 +1,52 @@
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: warning
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: off
+profile:
+  store-selected: true
+proxies:
+  - name: "RN-LA-REALITY"
+    type: vless
+    server: 198.44.36.240
+    port: 443
+    uuid: b8313816-3f2a-4b25-9b4c-8a7d5e2c1f90
+    network: tcp
+    tls: true
+    udp: true
+    servername: www.openssl.org
+    flow: xtls-rprx-vision
+    client-fingerprint: chrome
+    reality-opts:
+      public-key: Y2SUCiQ1A_8rRNr922vBfXLghaFmjbnWGZcMXoSKKFo
+      short-id: 6ba85179e30d4fc2
+  - name: "RN-LA-HY2"
+    type: hysteria2
+    server: 198.44.36.240
+    port: 8443
+    password: "97e99310d966833f89199f717278256d"
+    sni: www.bing.com
+    skip-cert-verify: true
+    udp: true
+proxy-groups:
+  - name: "节点选择"
+    type: select
+    proxies:
+      - "RN-LA-REALITY"
+      - "RN-LA-HY2"
+      - "DIRECT"
+  - name: "自动选择"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - "RN-LA-REALITY"
+      - "RN-LA-HY2"
+rules:
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,节点选择
